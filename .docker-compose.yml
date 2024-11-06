@@ -1,0 +1,11 @@
+services:
+  sanitize:
+    image: jacohanekom/sanitize:v1
+    ports:
+      - "0.0.0.0:8080:8080"
+    environment:
+      GIN_MODE: "release"
+      dbUsername: ""
+      dbPassword: ""
+      dbHost: ""
+      dbPort: ""
