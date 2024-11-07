@@ -117,9 +117,7 @@ curl -X 'DELETE' \
 }'
 ```
 # Changes Required for running this service in production 
-* It is recommended that the HTTP Interface is update support authentication. At the current stage no authentication support has been implemented. 
-* Due to this service being highly dependent on database queries it will be advantageous to introduce caching to increase volumes and response times. 
 * By default the docker-compose file ensures that the Microsoft SQL Server is started within docker. For production this service should point to
-an external database. 
-* Should this service be internet facing, it is recommended that it is served through HTTPS and a Load Balancer. 
-* This service is not protected against DDOS and similar attacks, therefore it is recommended to protect it with a Web Application Firewall. 
+  an external database.
+* The endpoints should be served through HTTPS, a Load Balancer and a Web Application Firewall.The web server should be configured to enforce authentication. 
+* Should the service runs into performance issues, it will be advantageous to introduce caching to increase volumes and response times.
