@@ -120,4 +120,4 @@ curl -X 'DELETE' \
 * By default the docker-compose file ensures that the Microsoft SQL Server is started within docker. For production this service should point to
   an external database.
 * The endpoints should be served through HTTPS, a Load Balancer and a Web Application Firewall.The web server should be configured to enforce authentication. 
-* Should the service runs into performance issues, it will be advantageous to introduce caching to increase volumes and response times.
+* Should the service runs into performance issues, it will be advantageous to introduce caching to increase response times and reduce database bottlenecks. 
