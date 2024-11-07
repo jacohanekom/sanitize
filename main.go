@@ -8,6 +8,8 @@ import (
 	"sanitize/controller"
 	"sanitize/data"
 
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	_ "sanitize/docs"
 )
 
@@ -15,7 +17,6 @@ import (
 // @version         1.0
 // @description     This is a microservice to sanitize strings based on the stored words, and to manage the stored words
 // @termsOfService  http://swagger.io/terms/
-
 // @contact.name   Jaco Hanekom
 // @contact.email  jhanekom@gmail.com
 
@@ -29,14 +30,16 @@ var dbUsername = os.Getenv("dbUsername")
 var dbPassword = os.Getenv("dbPassword")
 var dbHost = os.Getenv("dbHost")
 var dbPort = os.Getenv("dbPort")
-var dbSchema = os.Getenv("dbSchema")
+var dbDatabase = os.Getenv("dbDatabase")
+var servicePort = os.Getenv("servicePort")
+var swaggerInterface = os.Getenv("swaggerInterface")
 
 func main() {
 	log.Println("Starting Service...")
 
 	log.Println("Setting up database")
 	db, err := data.Initialize(fmt.Sprintf("%s;%s://%s:%s@%s:%s?database=%s",
-		"sqlserver", "sqlserver", dbUsername, dbPassword, dbHost, dbPort, dbSchema))
+		"sqlserver", "sqlserver", dbUsername, dbPassword, dbHost, dbPort, dbDatabase))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,11 +64,18 @@ func main() {
 
 	if _, err := os.Stat("sql_sensitive_list.json"); err == nil {
 		log.Printf("Moving sample data to imported")
-		os.Rename("sql_sensitive_list.json", "sql_sensitive_list.imported")
+		err := os.Rename("sql_sensitive_list.json", "sql_sensitive_list.imported")
+		if err != nil {
+			fmt.Printf("An error occured while renaming the file => %v", err)
+		}
 	}
 
-	log.Printf("Starting server on port %s", os.Getenv("PORT"))
-	err = r.Run(":8080")
+	if swaggerInterface == "true" {
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
+
+	log.Printf("Starting server on port %s", servicePort)
+	err = r.Run(":" + servicePort)
 	if err != nil {
 		log.Fatal(err)
 	}

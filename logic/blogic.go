@@ -46,7 +46,9 @@ func SanitizeText(textToSanitize []string, sanitizeWords []string) (result []str
 		sanitized := []rune(text)
 		for _, index := range replace {
 			if index < len(sanitized) {
-				sanitized[index] = '*'
+				if sanitized[index] != ' ' {
+					sanitized[index] = '*'
+				}
 			}
 		}
 

@@ -1,12 +1,28 @@
 services:
   sanitize:
-    image: jacohanekom/sanitize:v1
+    image: jacohanekom/sanitize:latest
+    depends_on:
+      - sqlserver
     ports:
       - "0.0.0.0:8080:8080"
+    restart: always
     environment:
       GIN_MODE: "release"
       dbUsername: "sa"
       dbPassword: "12345OHdf"
-      dbHost: "127.0.0.1"
+      dbHost: "sqlserver"
       dbPort: "1433"
-      dbSchema: "sanitize"
+      dbDatabase: "master"
+      swaggerInterface: "false"
+      servicePort: "8080"
+
+  sqlserver:
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      ports:
+        - "0.0.0.0:1433:1433"
+      volumes:
+        - ./sqlvolume:/var/opt/mssql
+      environment:
+        ACCEPT_EULA: 'Y'
+        SA_PASSWORD: '12345OHdf'
+        MSSQL_PID: 'Express'
