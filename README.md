@@ -5,7 +5,7 @@ This project contains multiple packages, providing a separation between logic an
 
 * Logic : This package contains the business logic to find and sanitize text using regular expressions. 
 * Data: This package contains all the code to perform the crud operations on the database.<br>
-An ORM Library (GORM) to achieve this functionality for both Microsoft SQL Server and SQL Lite.SQL Lite is used for running units tests.
+An ORM Library (GORM) has been implemented to achieve this functionality for both Microsoft SQL Server and SQL Lite.
 * Controller: This packages manages all the HTTP Rest Services using GIN and contains the swagger definitions
 
 ![architecture.png](architecture.png)
@@ -37,6 +37,8 @@ controller.SanitizeWord{
 * The sql_sensitive_list will be loaded on first run, and there after ignored. Once loaded the file will be renamed to sql_sensitive_list.processed
 * The release version runs under Docker.
 * By default the image will listen on port 8080, but this can be modified by editing the docker-compose file.
+* Due to the structure of the database, the update functionality will first delete the record, and then add a new one. 
+* SQL Lite is being used for running units tests, as it is a quick way to test SQL queries. 
 
 # Building Instructions
 A build script has been provided make.sh that runs on Linux Based Systems. This requires the latest version of Go available at https://go.dev. Running this script will build the latest 
@@ -53,11 +55,13 @@ Setting up and running the service requires the latest version of Docker.
    - swagger.yaml
    - sanitize.tar
 * Run the following command to load the image in the docker daemon ```docker load < sanitize.tar```
-* Once the file has been updated, the image can be started by running ```docker compose up -d```
+* The service can be started by running ```docker compose up -d```
+* Should you wish to display the swagger interface it can be enabled in the docker compose file by setting the field swaggerInterface to true. It can be accessed with the URL,
+http://127.0.0.1:8080/swagger/index.html. Where 127.0.0.1:8080 is the host and port where the service is running. 
 
 # Sample Curl Requests 
 The following is sample curl requests that can be used to verify whether the service is running correctly. localhost:8080 
-should be replaced with the applicable host:port 
+should be replaced with the applicable host and port 
 * Sanitize string
 ```
 curl -X 'POST' \
@@ -114,10 +118,9 @@ curl -X 'DELETE' \
 ```
 # Changes Required for running this service in production 
 * It is recommended that code is updated to support authentication. At the current stage no authentication support has been implemented. 
-* Due to this service being very heavy it might be advantageous to introduce caching.
+* Due to this service being very depending on database queries it might be advantageous to introduce caching.
 * By default the docker compose file ensures that the Microsoft SQL Server is started within docker. For production this service should point to
 a external database. This can be achieved by updating the docker-compose file.
-* By default the swagger web interface is enabled, this needs to be disable in production and can be done by editing the docker-compose file and setting 
-the flag 
 * It is also recommended that the service is run behind a WAF as it can be provide additional security, as the application has not security against
 DDOS and similar attacks. 
+* Should this service be internet facing it is imperative that it is served through HTTPS
