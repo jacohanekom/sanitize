@@ -94,7 +94,7 @@ curl -X 'PUT' \
 ```
 * Update one or more sanitized words
 ```
-url -X 'POST' \
+curl -X 'POST' \
   'http://localhost:8080/api/v1/words' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
