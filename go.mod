@@ -2,6 +2,8 @@ module sanitize
 
 go 1.23.2
 
+godebug x509negativeserial=1
+
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/swaggo/files v1.0.1
