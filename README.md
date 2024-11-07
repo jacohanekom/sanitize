@@ -46,7 +46,7 @@ swagger files, compile the application and setup a docker image. The latest rele
 
 # Installation Instructions
 Setting up and running the service requires the latest version of Docker. 
-* The latest version of the service is available under https://github.com/jacohanekom/sanitize_users/releases or under the release directory for a local build. 
+* The latest version of the service is available under https://github.com/jacohanekom/sanitize/releases or under the release directory for a local build. 
 * Once downloaded, untar the latest release for example 
 ```tar xvf 20241106220408.tar.gz```
 * This will produce 4 files
